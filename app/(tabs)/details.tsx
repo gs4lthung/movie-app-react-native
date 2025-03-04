@@ -6,9 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons"; // ✅ Import heart icon from Expo
+import { addData, deleteData, loadData, storeData } from "@/asyncStore";
+import { Movie } from "@/movie.interface";
 
 export default function DetailsMovie() {
   const router = useRouter();
@@ -18,9 +20,33 @@ export default function DetailsMovie() {
 
   const [isFavorite, setIsFavorite] = useState(false); // ✅ Track favorite state
 
-  const toggleFavorite = () => {
+  const toggleFavorite = async () => {
     setIsFavorite(!isFavorite);
+
+    if (isFavorite) await deleteData(movie);
+    else if (!isFavorite) await addData(movie);
   };
+
+  useFocusEffect(() => {
+    const loadFavoriteMovies = async () => {
+      try {
+        const value = await loadData();
+        console.log(value);
+        if (value) {
+          if (value.some((item: Movie) => item.id === movie.id)) {
+            console.log("Movie is favorite");
+            setIsFavorite(true);
+          } else {
+            console.log("Movie is not favorite");
+            setIsFavorite(false);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+    loadFavoriteMovies();
+  });
 
   return (
     <ScrollView style={styles.container}>
@@ -57,14 +83,12 @@ export default function DetailsMovie() {
 
       {/* Popularity, Release Date, Vote Average, and Vote Count */}
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>
-          ⭐ Popularity: {movie.popularity}
-        </Text>
+        <Text style={styles.infoText}>⭐ Popularity: {movie.popularity}</Text>
         <Text style={styles.infoText}>
           📅 Release Date: {movie.release_date}
         </Text>
         <Text style={styles.infoText}>
-          🎖️ Rating: {movie.vote_average} / 10
+          🎖️ Rating: {movie.vote_average.toFixed(1)} / 10
         </Text>
         <Text style={styles.infoText}>🗳️ Votes: {movie.vote_count}</Text>
       </View>
