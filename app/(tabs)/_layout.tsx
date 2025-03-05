@@ -41,7 +41,7 @@ export default function TabLayout() {
         options={{
           title: "Details",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="info.circle.fill" color={color} />
+            <IconSymbol size={28} name="movie.outline" color={color} />
           ),
         }}
       />
@@ -50,7 +50,7 @@ export default function TabLayout() {
         options={{
           title: "Search",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="magnifyingglass" color={color} />
+            <IconSymbol size={28} name="search.outline" color={color} />
           ),
         }}
       />

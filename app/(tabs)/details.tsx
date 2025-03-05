@@ -55,7 +55,7 @@ export default function DetailsMovie() {
         <AntDesign
           name={isFavorite ? "heart" : "hearto"} // ✅ Toggle between filled & outlined heart
           size={30}
-          color={isFavorite ? "red" : "black"}
+          color={isFavorite ? "red" : "white"}
         />
       </TouchableOpacity>
 
